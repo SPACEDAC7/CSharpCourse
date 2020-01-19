@@ -9,7 +9,7 @@ namespace DatingApp.API.Models
     {
         public int Id { get; set; }
         public int Username { get; set; }
-        public int PasswordHash { get; set; }
-        public int PasswordSalt { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
     }
 }
