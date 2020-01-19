@@ -31,6 +31,12 @@ namespace DatingApp.API
             services.AddControllers();
             //Lecture 18 Add cors
             services.AddCors();
+            //Lecture 30 Add Dependency injection
+            services.AddScoped<IAuthRepository, AuthRepository>(); // Scoped objects are the same within a request, but different across different requests
+            /*Lecture 30 studied
+             services.AddSingleton() - Singleton objects are the same for every object and every request (Could cause problems with concurrency)
+             services.AddTransient() - Transient objects are always different; a new instance is provided to every controller and every service.
+             */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,7 +46,7 @@ namespace DatingApp.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+    
             app.UseHttpsRedirection();
 
             app.UseRouting();
