@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +58,7 @@ namespace DatingApp.API.Controllers
         {
            
 
-            var userFromRepo = await _repo.Login(userForLogin.Username, userForLogin.Password);
+            var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), userForLogin.Password);
 
             if (userFromRepo == null)
                 return Unauthorized();
