@@ -1,23 +1,31 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { getValues } from './util/apiFunctions';
-import { Navbar, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
-import { Nav } from 'react-bootstrap';
+import { Login } from './util/apiFunctions';
+import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { values: [] }
+    this.state = { username: "", password: "", values: [], token: "" }
   }
 
-  componentDidMount() {
+  /* componentDidMount() {
     this.doCall()
+  } */
+
+  handleUsernameChange(event) {
+    this.setState({ username: event.target.value });
+  }
+
+  handlePasswordChange(event) {
+    this.setState({ password: event.target.value });
   }
 
 
   doCall() {
-    getValues();
+    console.log('We are login with ', this.state);
+    this.setState({ token : Login(this.state.username, this.state.password)});
   }
 
   render() {
@@ -32,14 +40,28 @@ class App extends Component {
               <Nav.Link href="#home">Values</Nav.Link>
               <Nav.Link href="#link">Messages</Nav.Link>
             </Nav>
-            <Form inline>
-              <FormControl type="text" placeholder="Username" className="mr-sm-2" />
-              <FormControl type="text" placeholder="Password" className="mr-sm-2" />
-              <Button variant="outline-success">Login</Button>
+            <Form inline onSubmit={() => this.doCall()}>
+              <FormControl
+                type="text"
+                value={this.state.username}
+                onChange={(event) => this.handleUsernameChange(event)}
+                placeholder="Username"
+                className="mr-sm-2" />
+              <FormControl
+                type="password"
+                value={this.state.password}
+                onChange={(event) => this.handlePasswordChange(event)}
+                placeholder="Password"
+                className="mr-sm-2" />
+              <Button type='submit'
+                variant="outline-success" >Login</Button>
             </Form>
           </Navbar.Collapse>
         </Navbar>
 
+        <div>
+          Token: {this.state.token}
+        </div>
 
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
