@@ -20,7 +20,7 @@ export function getValues() {
     });
 }
 
-export async function Login(username, password) {
+export async function logIn(username, password) {
   console.log('we are going to login');
   var url = host + 'api/auth/login';
   const res = await fetch(url, {
@@ -32,9 +32,20 @@ export async function Login(username, password) {
       username: username,
       password: password,
     })
-  });
-  console.log(res);
-  const values = await (res.status === 200 ? res.json() : {});
-  console.log(values);
-  return values;
+  })
+  .then(res => res.json())
+  .then(response => response.token);
+
+  localStorage.setItem('token', res);
+
+  return res;
+}
+
+export function isLoggedIn() {
+  return localStorage.getItem('token') !== null;
+}
+
+export function logOut() {
+  localStorage.removeItem('token');
+  console.log("We are logged out");
 }

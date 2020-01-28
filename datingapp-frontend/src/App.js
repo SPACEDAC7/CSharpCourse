@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Login } from './util/apiFunctions';
-import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
+import { logIn, logOut, isLoggedIn } from './util/apiFunctions';
+import { Navbar, Nav, Form, FormControl, Button, NavDropdown } from 'react-bootstrap';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = { username: "", password: "", values: [], token: "" }
   }
-
-  /* componentDidMount() {
-    this.doCall()
-  } */
 
   handleUsernameChange(event) {
     this.setState({ username: event.target.value });
@@ -24,8 +20,13 @@ class App extends Component {
 
 
   doCall() {
-    console.log('We are login with ', this.state);
-    this.setState({ token : Login(this.state.username, this.state.password)});
+    this.setState({ token: logIn(this.state.username, this.state.password) });
+    console.log(this.state);
+  }
+
+  doLogOut() {
+    logOut();
+    this.setState({token: ''});
   }
 
   render() {
@@ -40,29 +41,34 @@ class App extends Component {
               <Nav.Link href="#home">Values</Nav.Link>
               <Nav.Link href="#link">Messages</Nav.Link>
             </Nav>
-            <Form inline onSubmit={() => this.doCall()}>
-              <FormControl
-                type="text"
-                value={this.state.username}
-                onChange={(event) => this.handleUsernameChange(event)}
-                placeholder="Username"
-                className="mr-sm-2" />
-              <FormControl
-                type="password"
-                value={this.state.password}
-                onChange={(event) => this.handlePasswordChange(event)}
-                placeholder="Password"
-                className="mr-sm-2" />
-              <Button type='submit'
-                variant="outline-success" >Login</Button>
-            </Form>
+            {this.state.token == '' ?
+              (<Form inline onSubmit={() => this.doCall()}>
+                <FormControl
+                  type="text"
+                  value={this.state.username}
+                  onChange={(event) => this.handleUsernameChange(event)}
+                  placeholder="Username"
+                  className="mr-sm-2" />
+                <FormControl
+                  type="password"
+                  value={this.state.password}
+                  onChange={(event) => this.handlePasswordChange(event)}
+                  placeholder="Password"
+                  className="mr-sm-2" />
+                <Button type='submit'
+                  variant="outline-success" >Login</Button>
+              </Form>) :
+              (<NavDropdown title="Hello User" id="nav-dropdown">
+                <NavDropdown.Item eventKey="4.1">Action</NavDropdown.Item>
+                <NavDropdown.Item eventKey="4.2">Another action</NavDropdown.Item>
+                <NavDropdown.Item eventKey="4.3">Something else here</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item eventKey="4.4" onClick={() => this.doLogOut()}>Log Out</NavDropdown.Item>
+              </NavDropdown>)
+            }
+
           </Navbar.Collapse>
         </Navbar>
-
-        <div>
-          Token: {this.state.token}
-        </div>
-
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
