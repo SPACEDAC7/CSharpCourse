@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import { logIn, logOut, isLoggedIn } from './util/apiFunctions';
 import { Navbar, Nav, Form, FormControl, Button, NavDropdown } from 'react-bootstrap';
+import Register from './components/Register';
 
 class App extends Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class App extends Component {
               <Nav.Link href="#home">Values</Nav.Link>
               <Nav.Link href="#link">Messages</Nav.Link>
             </Nav>
+            <Register></Register>
             {this.state.token == '' ?
               (<Form inline onSubmit={() => this.doCall()}>
                 <FormControl
