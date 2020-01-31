@@ -49,3 +49,23 @@ export function logOut() {
   localStorage.removeItem('token');
   console.log("We are logged out");
 }
+
+export async function register(username, password) {
+  console.log('we are going to register this user: ', username, password);
+  var url = host + 'api/auth/register';
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password,
+    })
+  })
+  .then(res => res.status)
+
+  console.log("Response from registration: ", res);
+
+  return res;
+}

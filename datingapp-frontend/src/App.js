@@ -42,9 +42,8 @@ class App extends Component {
               <Nav.Link href="#home">Values</Nav.Link>
               <Nav.Link href="#link">Messages</Nav.Link>
             </Nav>
-            <Register></Register>
             {this.state.token == '' ?
-              (<Form inline onSubmit={() => this.doCall()}>
+              (<Form inline>
                 <FormControl
                   type="text"
                   value={this.state.username}
@@ -57,8 +56,8 @@ class App extends Component {
                   onChange={(event) => this.handlePasswordChange(event)}
                   placeholder="Password"
                   className="mr-sm-2" />
-                <Button type='submit'
-                  variant="outline-success" >Login</Button>
+                <Button type='button'
+                  variant="outline-success" onClick={() => this.doCall()} >Login</Button>
               </Form>) :
               (<NavDropdown title="Hello User" id="nav-dropdown">
                 <NavDropdown.Item eventKey="4.1">Action</NavDropdown.Item>
@@ -71,20 +70,7 @@ class App extends Component {
 
           </Navbar.Collapse>
         </Navbar>
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Register></Register>
         <button onClick={() => this.doCall()}>Press here</button>
         <hr></hr>
         {this.state.values.map(x => {
