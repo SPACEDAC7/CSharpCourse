@@ -56,7 +56,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserForLogin userForLogin)
         {
-           
+            throw new Exception("Comeme los huevos");
 
             var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), userForLogin.Password);
 

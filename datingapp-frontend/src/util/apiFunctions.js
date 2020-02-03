@@ -17,7 +17,7 @@ export function getValues() {
     })
     .then(values => {
       console.log(values)
-    });
+    }).catch(error => console.log("Error - ", error));
 }
 
 export async function logIn(username, password) {
@@ -33,8 +33,15 @@ export async function logIn(username, password) {
       password: password,
     })
   })
-  .then(res => res.json())
-  .then(response => response.token);
+  .then(res => {
+    if(res.ok){
+      return res.json();
+    } else {
+      res.text().then(res => console.log("uff", res));
+      throw new Error("This is an error")
+    }})
+  .then(response => response.token)
+  .catch(error => console.log("Error - ", error));
 
   localStorage.setItem('token', res);
 
@@ -64,6 +71,7 @@ export async function register(username, password) {
     })
   })
   .then(res => res.status)
+  .catch(error => console.log("Error - ", error));
 
   console.log("Response from registration: ", res);
 
