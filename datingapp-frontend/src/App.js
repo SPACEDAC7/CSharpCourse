@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { logIn, logOut, isLoggedIn } from './util/apiFunctions';
 import { Navbar, Nav, Form, FormControl, Button, NavDropdown } from 'react-bootstrap';
 import Register from './components/Register';
+import alertify from 'alertifyjs';
 
 class App extends Component {
   constructor(props) {
@@ -21,12 +21,21 @@ class App extends Component {
 
 
   doCall() {
-    this.setState({ token: logIn(this.state.username, this.state.password) });
-    console.log(this.state);
+    logIn(this.state.username, this.state.password).then(res => {
+      console.log("Respuesta del login: ", res);
+      if (res.errorCode !== undefined){
+        alertify.error("There is an error");
+      } else {
+        alertify.success("Nos hemos podido loggear");
+        this.setState({ token: logIn(this.state.username, this.state.password) });
+        console.log(this.state);
+      }
+    });
   }
 
   doLogOut() {
     logOut();
+    alertify.message("Logged out");
     this.setState({token: ''});
   }
 
@@ -72,6 +81,7 @@ class App extends Component {
         </Navbar>
         <Register></Register>
         <button onClick={() => this.doCall()}>Press here</button>
+            <button onClick={() => { alertify.alert('Alert Title', 'Alert Message!')}}>ALERT TEST</button>
         <hr></hr>
         {this.state.values.map(x => {
           return (<button key={x.id}>{x.name}</button>);

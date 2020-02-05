@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace DatingApp.API.Controllers
 {
@@ -30,7 +31,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody]UserForRegister userForRegister) //L33: FromBody is not necessary if you have ApiController notation on the top
+        public async Task<String> Register([FromBody]UserForRegister userForRegister) //L33: FromBody is not necessary if you have ApiController notation on the top
         {
             // L:33 Validate request id we are not using [ApiController]
             /*if (!ModelState.IsValid)
@@ -42,26 +43,25 @@ namespace DatingApp.API.Controllers
 
             if(await _repo.UserExists(userForRegister.Username))
             {
-                return BadRequest("Username already exists");
+                ErrorCustomized error = new ErrorCustomized("500", "The error is already created");
+                return JsonConvert.SerializeObject(error);
             }
 
             var userToCreate = new User { Username = userForRegister.Username };
 
             var ucreatedUser = await _repo.Register(userToCreate, userForRegister.Password);
 
-            return StatusCode(201);
+            return JsonConvert.SerializeObject(ucreatedUser);
 
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody]UserForLogin userForLogin)
+        public async Task<String> Login([FromBody]UserForLogin userForLogin)
         {
-            throw new Exception("Comeme los huevos");
-
             var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), userForLogin.Password);
 
             if (userFromRepo == null)
-                return Unauthorized();
+                return JsonConvert.SerializeObject(new ErrorCustomized("403", "unauthorized"));
 
             var claims = new[]
             {
@@ -84,11 +84,9 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
+            String res = tokenHandler.WriteToken(token);
 
+            return JsonConvert.SerializeObject(res);
         }
 
     }

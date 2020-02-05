@@ -9,7 +9,7 @@ export function getValues() {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Controll-Allow-Origin':'*'
+        'Access-Controll-Allow-Origin': '*'
       },
     }).then(res => {
       console.log(res);
@@ -33,17 +33,19 @@ export async function logIn(username, password) {
       password: password,
     })
   })
-  .then(res => {
-    if(res.ok){
-      return res.json();
-    } else {
-      res.text().then(res => console.log("uff", res));
-      throw new Error("This is an error")
-    }})
-  .then(response => response.token)
-  .catch(error => console.log("Error - ", error));
+    .then(res => {
+        return res.json();
+    })
+    .catch(error => {
+      console.log("Fallo - ", error)
+      return {error : error};
+    });
 
-  localStorage.setItem('token', res);
+    console.log("TOKEN: ",res.token)
+    console.log("RES: ",res)
+    if(res.token !== undefined){
+      localStorage.setItem('token', res);
+    }
 
   return res;
 }
@@ -58,7 +60,6 @@ export function logOut() {
 }
 
 export async function register(username, password) {
-  console.log('we are going to register this user: ', username, password);
   var url = host + 'api/auth/register';
   const res = await fetch(url, {
     method: 'POST',
@@ -70,10 +71,21 @@ export async function register(username, password) {
       password: password,
     })
   })
-  .then(res => res.status)
-  .catch(error => console.log("Error - ", error));
-
-  console.log("Response from registration: ", res);
+    .then(res => {
+      if (res.ok) {
+        console.log("Respuesta correcta: ", res.json())
+        return true;
+      } else {
+        return res.text().then(res => {
+          console.log("ERROR REGISTRATION: ", res.json())
+          return false;
+        });
+      }
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
 
   return res;
 }

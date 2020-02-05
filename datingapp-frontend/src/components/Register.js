@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, FormControl, Button, InputGroup} from 'react-bootstrap';
 import { register } from '../util/apiFunctions'
 import './Register.css';
+import alertify from 'alertifyjs';
 
 class Register extends Component {
   constructor(props) {
@@ -22,7 +23,13 @@ class Register extends Component {
   }
 
   doRegister() {
-    register(this.state.username, this.state.password);
+    register(this.state.username, this.state.password).then(registerResponse => {
+      if(registerResponse===true){
+        alertify.success("Usuario registrado correctamente");
+      }else{
+        alertify.error("No se ha podido realizar el registro");
+      }
+    });
   }
 
   render() {
