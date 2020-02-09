@@ -21,7 +21,7 @@ export function getValues() {
 }
 
 export async function logIn(username, password) {
-  console.log('we are going to login');
+  console.log('We are login with username: ', username ,' y paswword: ', password);
   var url = host + 'api/auth/login';
   const res = await fetch(url, {
     method: 'POST',
@@ -44,7 +44,7 @@ export async function logIn(username, password) {
     console.log("TOKEN: ",res.token)
     console.log("RES: ",res)
     if(res.token !== undefined){
-      localStorage.setItem('token', res);
+      localStorage.setItem('token', res.token);
     }
 
   return res;
@@ -60,6 +60,7 @@ export function logOut() {
 }
 
 export async function register(username, password) {
+  console.log("Registrar con el usuario: ", username, " y contrasenya: ", password);
   var url = host + 'api/auth/register';
   const res = await fetch(url, {
     method: 'POST',

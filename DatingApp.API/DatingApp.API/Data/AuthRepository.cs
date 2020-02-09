@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DatingApp.API.Data
@@ -24,6 +25,11 @@ namespace DatingApp.API.Data
             if (user == null)
                 return null;
 
+            Console.WriteLine("Usuario para el login. Username: " + user.Username + " , PaswordHash: ");
+            Console.WriteLine(Encoding.UTF8.GetString(user.PasswordHash));
+            Console.WriteLine("Salt: ");
+            Console.WriteLine(Encoding.UTF8.GetString(user.PasswordSalt));
+
             if (!VerifyUser(password, user.PasswordHash, user.PasswordSalt))
             {
                 return null;
@@ -36,8 +42,13 @@ namespace DatingApp.API.Data
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                Console.WriteLine("Password hash: ");
+                Console.WriteLine(Encoding.UTF8.GetString(passwordHash));
+                Console.WriteLine("ComputedHash: ");
+                Console.WriteLine(Encoding.UTF8.GetString(computedHash));
                 for (int i=0; i< computedHash.Length; i++)
                 {
+                    Console.WriteLine(i + " - ComputedHash: " + computedHash[i] + " - PasswordHash: " + passwordHash[i]);
                     if (computedHash[i] != passwordHash[i]) return false;
                 }
 
@@ -68,7 +79,7 @@ namespace DatingApp.API.Data
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
                 
         }

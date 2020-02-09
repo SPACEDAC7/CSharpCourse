@@ -59,10 +59,12 @@ namespace DatingApp.API.Controllers
         public async Task<String> Login([FromBody]UserForLogin userForLogin)
         {
             var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), userForLogin.Password);
-
+            Console.WriteLine("User From Repo: " + userFromRepo + " ---- ");
             if (userFromRepo == null)
-                return JsonConvert.SerializeObject(new ErrorCustomized("403", "unauthorized"));
-
+            {
+                ErrorCustomized e = new ErrorCustomized("403", "unauthorized");
+                return JsonConvert.SerializeObject(e);
+            }
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
@@ -86,7 +88,9 @@ namespace DatingApp.API.Controllers
 
             String res = tokenHandler.WriteToken(token);
 
-            return JsonConvert.SerializeObject(res);
+            Token tokenTosend = new Token(res);
+
+            return JsonConvert.SerializeObject(tokenTosend);
         }
 
     }
