@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -44,6 +45,7 @@ namespace DatingApp.API
              services.AddSingleton() - Singleton objects are the same for every object and every request (Could cause problems with concurrency)
              services.AddTransient() - Transient objects are always different; a new instance is provided to every controller and every service.
              */
+            services.AddScoped<IDatingRepository, DatingRepository>(); // Scoped objects are the same within a request, but different across different requests
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
