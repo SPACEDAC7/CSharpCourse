@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
@@ -39,6 +40,8 @@ namespace DatingApp.API
             services.AddControllers();
             //Lecture 18 Add cors
             services.AddCors();
+            //Lecture 78 Add Auto mapper
+            services.AddAutoMapper(typeof(DatingRepository).Assembly);
             //Lecture 30 Add Dependency injection
             services.AddScoped<IAuthRepository, AuthRepository>(); // Scoped objects are the same within a request, but different across different requests
             /*Lecture 30 studied
