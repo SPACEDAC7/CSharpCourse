@@ -1,37 +1,48 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {getUsers} from '../../util/apiFunctions'
 import './members.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faHeart, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+import MemberDetailed from '../member-detailed/member-det'
 
-export default class Member extends Component{
-    constructor(props){
-        super(props)
-        this.state = {members: null};
-    }
+export default function Member(){
+    const [members, setMembers] = useState([]);
+    
+    
 
-    componentDidMount(){
-        getUsers().then(res => {
-            this.setState({members: res})
-        });
-    }
+    useEffect(() => {
+        if (members.length === 0) {
+            getUsers().then(res => {
+               setMembers(res)
+            });
+       }
+    });
 
 
-    render(){
-        const {members} = this.state;
-        return !!members && <div className="tarjetas">
+    let {path, url} = useRouteMatch();
+
+    return (
+        <div className="tarjetas">
             {members.map((user) => {
                 return (
-                    <div className="tarjeta">
-                        <img src={user.PhotoUrl}></img>
+                    <div key={user.Username} className="tarjeta">
+                        <img alt="cosa" src={user.PhotoUrl}></img>
                         <p>{user.Username}</p>
                         <p>{user.City}</p>
-                        <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faUser} /></button>
+                        <Link to={`${url}/${user.Username}`}><button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faUser} /></button></Link>
                         <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faHeart} /></button>
                         <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faPaperPlane} /></button>
+                    
                     </div>
                 )
             })}
+
+          <Switch>
+            <Route path={`${path}/:memberUsername`}>
+              <MemberDetailed></MemberDetailed>
+            </Route>
+          </Switch>
         </div>
-    }
+    )
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormControl, Button, InputGroup} from 'react-bootstrap';
+import { FormControl, Button, InputGroup} from 'react-bootstrap';
 import { register } from '../../util/apiFunctions'
 import './Register.css';
 import alertify from 'alertifyjs';
