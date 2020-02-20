@@ -1,25 +1,5 @@
 const host = 'https://localhost:44356/';
 
-export function getValues() {
-  console.log('we are going to call');
-  var url = host + 'api/values';
-  fetch(
-    url,
-    {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Controll-Allow-Origin': '*'
-      },
-    }).then(res => {
-      console.log(res);
-      return res.status === 200 ? res.json() : {}
-    })
-    .then(values => {
-      console.log(values)
-    }).catch(error => console.log("Error - ", error));
-}
-
 export async function logIn(username, password) {
   console.log('We are login with username: ', username ,' y paswword: ', password);
   var url = host + 'api/auth/login';
@@ -82,6 +62,27 @@ export async function register(username, password) {
           return false;
         });
       }
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}
+
+export async function getUsers(){
+  var url = host + 'api/users'; 
+  const res = await fetch(url, {
+    method: 'Get',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => response.json())
+    .then(res => {
+      console.log(res);
+      return res;
     })
     .catch(error => {
       console.log("Ellor - ", error);

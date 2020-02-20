@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { isLoggedIn, logOut } from './util/apiFunctions';
+import { logOut } from './util/apiFunctions';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import Register from './components/register/Register';
 import alertify from 'alertifyjs';

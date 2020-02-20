@@ -1,0 +1,16 @@
+.tarjetas {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.tarjeta{
+    margin-left: 15px;
+    margin-right: 15px;
+    padding: 5px;
+    border: 1px solid #111111;
+}
+
+.little-borders{
+    margin: 2px
+}
