@@ -112,3 +112,29 @@ export async function getUserById(id){
 
   return res;
 }
+
+export async function apiUpdateUser(id, username) {
+  console.log("update user",username)
+  var url = host + 'api/users/' + id;
+  const res = await fetch(url, {
+    method: 'Put',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+    body: JSON.stringify({
+      KnownAs: username.knownAs,
+      Introduction: username.introduction,
+      LookingFor: username.lookingFor,
+      Interests: username.interests,
+      City: username.city,
+    })
+  })
+    .then(res => res.json())
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}

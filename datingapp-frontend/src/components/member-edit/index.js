@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {getUserById} from '../../util/apiFunctions'
+import {getUserById, apiUpdateUser} from '../../util/apiFunctions'
+
+const updateUser = ((userId,knownAs,introduction,lookingFor,interests,city) => {
+    apiUpdateUser(userId,
+        {
+            knownAs,introduction,lookingFor,interests,city
+        })
+});
 
 export default function MemberEdit(props){
 
@@ -42,5 +49,7 @@ export default function MemberEdit(props){
         <div>
             City: <input type="text" value={city} onChange={(event) => setCity(event.target.value)}></input>
         </div>
+
+        <button type="button" onClick={() => updateUser(userId,knownAs,introduction,lookingFor,interests,city)}>Actualizar</button>
     </div>)
 }

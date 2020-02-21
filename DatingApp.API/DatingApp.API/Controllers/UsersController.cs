@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.DTOs;
@@ -53,6 +54,22 @@ namespace DatingApp.API.Controllers
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
+        }
+
+
+        [HttpPut("{id}")]
+        public async Task<String> updateUser(int id, UserForUpdated userForUpdated)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+            var user = await this.repo.GetUser(id);
+
+            this.mapper.Map(userForUpdated,user);
+
+            if (await this.repo.SaveAll())
+                return "";
+
+            return JsonConvert.SerializeObject(new ErrorCustomized("500", "Error updating the user"));
         }
     }
 }
