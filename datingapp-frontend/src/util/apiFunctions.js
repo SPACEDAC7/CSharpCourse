@@ -91,3 +91,24 @@ export async function getUsers(){
 
   return res;
 }
+
+export async function getUserById(id){
+  var url = host + 'api/users/' + id; 
+  const res = await fetch(url, {
+    method: 'Get',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => response.json())
+    .then(res => {
+      console.log("Get user by id: ",res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}

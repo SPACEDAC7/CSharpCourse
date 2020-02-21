@@ -6,7 +6,7 @@ import Register from './components/register/Register';
 import alertify from 'alertifyjs';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from './components/login/login';
-import Member from './components/members/members';
+import MemberRouter from './components/member-router'
 import Lists from './components/list/lists';
 import Message from './components/message/message';
 
@@ -67,7 +67,7 @@ class App extends Component {
               <Lists></Lists>
             </Route>
             <Route path="/members">
-              <Member></Member>
+              <MemberRouter></MemberRouter>
             </Route>
             <Route path="/messages">
               <Message></Message>
