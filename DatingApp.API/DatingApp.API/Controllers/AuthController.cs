@@ -88,7 +88,7 @@ namespace DatingApp.API.Controllers
 
             String res = tokenHandler.WriteToken(token);
 
-            Token tokenTosend = new Token(res);
+            Token tokenTosend = new Token(res, userFromRepo.Id);
 
             return JsonConvert.SerializeObject(tokenTosend);
         }

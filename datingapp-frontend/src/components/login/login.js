@@ -27,7 +27,7 @@ class Login extends Component {
             } else {
                 alertify.success("Nos hemos podido loggear");
                 this.setState({ token: logIn(this.state.username, this.state.password) });
-                this.props.setToken(res.token);
+                this.props.setToken(res.token, res.id);
 
 
                 console.log(this.state);

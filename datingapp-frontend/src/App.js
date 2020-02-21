@@ -9,11 +9,12 @@ import Login from './components/login/login';
 import MemberRouter from './components/member-router'
 import Lists from './components/list/lists';
 import Message from './components/message/message';
+import MemberEdit from './components/member-edit'
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { token: undefined };
+    this.state = { token: undefined, userId: undefined };
     this.setToken = this.setToken.bind(this)
   }
 
@@ -27,8 +28,8 @@ class App extends Component {
     alertify.message("Logged out");
   }
 
-  setToken(token) {
-    this.setState({ token: token });
+  setToken(token, id) {
+    this.setState({ token: token, userId: id });
   }
 
   render() {
@@ -51,9 +52,7 @@ class App extends Component {
                   <Nav.Link><Link to="/messages">Messages</Link></Nav.Link>
                 </Nav>
                   <NavDropdown title="Hello User" id="nav-dropdown">
-                    <NavDropdown.Item eventKey="4.1">Action</NavDropdown.Item>
-                    <NavDropdown.Item eventKey="4.2">Another action</NavDropdown.Item>
-                    <NavDropdown.Item eventKey="4.3">Something else here</NavDropdown.Item>
+                  <NavDropdown.Item eventKey="4.1"><Link to={`/edit`}>Edit Profile</Link></NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item eventKey="4.4" onClick={() => this.doLogOut()}>Log Out</NavDropdown.Item>
                   </NavDropdown></div>)
@@ -71,6 +70,9 @@ class App extends Component {
             </Route>
             <Route path="/messages">
               <Message></Message>
+            </Route>
+            <Route path={`/edit`}>
+              <MemberEdit userId={this.state.userId}></MemberEdit>
             </Route>
             <Route path="/">
               <Register></Register>
