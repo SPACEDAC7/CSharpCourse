@@ -40,6 +40,8 @@ namespace DatingApp.API
             services.AddControllers();
             //Lecture 18 Add cors
             services.AddCors();
+            //Lecture 106 Add Cloudify configuration
+            services.Configure<CloudinarySettings>(Configuration.GetSection("AppSettings:CloudinarySettings"));
             //Lecture 78 Add Auto mapper
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
             //Lecture 30 Add Dependency injection
