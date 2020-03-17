@@ -113,6 +113,34 @@ export async function getUserById(id){
   return res;
 }
 
+export async function uploadFile(id, file){
+  var url = host + 'api/users/' + id + '/photos'; 
+  console.log("File - ",file[0][0])
+  const test = {hi: "hi"}
+  var formData = new FormData();
+  formData.append('File', file[0][0]);
+  formData.append("Test","test");
+  console.log("FileForm: ", formData.get("File"));
+  const res = await fetch(url, {
+    method: 'Post',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+    body: formData
+  })
+    .then(response => response.json())
+    .then(res => {
+      console.log("Uploaded picture: ",res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}
+
 export async function apiUpdateUser(id, username) {
   console.log("update user",username)
   var url = host + 'api/users/' + id;
