@@ -96,5 +96,43 @@ namespace DatingApp.API.Controllers
 
         }
 
+        [HttpPost("{id}/setMain")]
+        public async Task<String> SetMainPhoto(int userId, int id)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+
+            var user = await this.repo.GetUser(userId);
+
+            if(!user.Photos.Any(p => p.Id == id))
+            {
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+            }
+
+            var photoFromRepo = await this.repo.GetPhoto(id);
+            if (photoFromRepo.IsMain)
+            {
+                return JsonConvert.SerializeObject(new ErrorCustomized("400", "Esta foto ya es main"));
+            }
+
+            var userPhotos = await this.repo.GetPhotosForUser(userId);
+
+            if(!userPhotos.Any( p => p.Id == id))
+            {
+                return JsonConvert.SerializeObject(new ErrorCustomized("400", "El usuario no tiene esa foto"));
+            }
+
+            foreach(var photo in userPhotos)
+            {
+                photo.IsMain = photo.Id == id;
+            }
+
+            if (await this.repo.SaveAll())
+            {
+                return JsonConvert.SerializeObject(new CorrectReturn("Picture set main correctly"));
+            }
+            return JsonConvert.SerializeObject(new ErrorCustomized("500", "Error guardando cosas"));
+        }
+
     }
 }

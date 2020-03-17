@@ -7,7 +7,7 @@ namespace DatingApp.API.DTOs
 {
     public class CorrectReturn
     {
-        private string message { get; set; }
+        public string message { get; set; }
 
         public CorrectReturn(string message)
         {

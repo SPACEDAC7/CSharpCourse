@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom'
-import {getUserById, uploadFile} from '../../util/apiFunctions'
+import {getUserById, uploadFile, updateMainPicture} from '../../util/apiFunctions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faPaperPlane, faTrash, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import ImageUploader from "react-images-upload";
@@ -63,7 +63,7 @@ return (<div>
                 {member?.Photos?.map(photo => {
                     return (<div>
                         <img alt={photo?.Description} key={photo.Id} src={photo?.Url}></img>
-                        <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faExclamation} /> Makes main</button>
+                        <button className="btn btn-primary little-borders" onClick={()=> updateMainPicture(memberId, photo.Id)}><FontAwesomeIcon icon={faExclamation} /> Makes main</button>
                         <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faTrash} /> Remove</button>
                         </div>);
                 })}
