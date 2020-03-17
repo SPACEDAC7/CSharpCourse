@@ -49,7 +49,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPhotoForUser(int userId, PhotoForCreation photoForCreation)
+        public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm] PhotoForCreation photoForCreation)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return BadRequest("Could not add photo");
