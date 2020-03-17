@@ -115,12 +115,8 @@ export async function getUserById(id){
 
 export async function uploadFile(id, file){
   var url = host + 'api/users/' + id + '/photos'; 
-  console.log("File - ",file[0][0])
-  const test = {hi: "hi"}
   var formData = new FormData();
   formData.append('File', file[0][0]);
-  formData.append("Test","test");
-  console.log("FileForm: ", formData.get("File"));
   const res = await fetch(url, {
     method: 'Post',
     headers: {
