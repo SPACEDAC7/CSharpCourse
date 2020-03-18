@@ -147,7 +147,28 @@ export async function updateMainPicture(userId, photoId) {
   })
     .then(response => response.json())
     .then(res => {
-      console.log("Uploaded picture: ",res);
+      console.log("Update main photo picture: ",res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}
+
+export async function deletePicture(userId, photoId) {
+  var url = host + 'api/users/' + userId + '/photos/' + photoId; 
+  const res = await fetch(url, {
+    method: 'Delete',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => response.json())
+    .then(res => {
+      console.log("Delete picture: ",res);
       return res;
     })
     .catch(error => {

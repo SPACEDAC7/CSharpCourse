@@ -134,5 +134,49 @@ namespace DatingApp.API.Controllers
             return JsonConvert.SerializeObject(new ErrorCustomized("500", "Error guardando cosas"));
         }
 
+        [HttpDelete("{id}")]
+        public async Task<string> DeletePhoto(int userId, int id)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+
+            var user = await this.repo.GetUser(userId);
+
+            if (!user.Photos.Any(p => p.Id == id))
+            {
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+            }
+
+            var photoFromRepo = await this.repo.GetPhoto(id);
+            if (photoFromRepo.IsMain)
+            {
+                return JsonConvert.SerializeObject(new ErrorCustomized("400", "No puedes borrar la main foto"));
+            }
+
+            if(photoFromRepo.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photoFromRepo.PublicId);
+
+                var result = await this.cloudinary.DestroyAsync(deleteParams);
+
+                if (result.Result == "ok")
+                {
+                    this.repo.Delete(photoFromRepo);
+                }
+            } else
+            {
+                this.repo.Delete(photoFromRepo);
+            }
+            
+
+            if(await this.repo.SaveAll())
+            {
+                return JsonConvert.SerializeObject(new CorrectReturn("Removed correctly"));
+            }
+
+            return JsonConvert.SerializeObject(new ErrorCustomized("400", "Can't be saved"));
+
+        }
+
     }
 }

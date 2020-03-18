@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom'
-import {getUserById, uploadFile, updateMainPicture} from '../../util/apiFunctions'
+import {getUserById, uploadFile, updateMainPicture, deletePicture} from '../../util/apiFunctions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faPaperPlane, faTrash, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import ImageUploader from "react-images-upload";
+import alertify from 'alertifyjs';
 
 
 export default function MemberDetailed(){
@@ -64,7 +65,10 @@ return (<div>
                     return (<div>
                         <img alt={photo?.Description} key={photo.Id} src={photo?.Url}></img>
                         <button className="btn btn-primary little-borders" onClick={()=> updateMainPicture(memberId, photo.Id)}><FontAwesomeIcon icon={faExclamation} /> Makes main</button>
-                        <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faTrash} /> Remove</button>
+                        <button className="btn btn-primary little-borders" onClick={()=>{
+                            alertify.confirm('Delete photo', 'Seguro que quieres borrar esta photo', function(){ deletePicture(memberId, photo.Id) }
+                            , function(){ alertify.error('Cancel')});
+                        }}><FontAwesomeIcon icon={faTrash} /> Remove</button>
                         </div>);
                 })}
                 <div>
