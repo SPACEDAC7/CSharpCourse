@@ -27,7 +27,7 @@ export default function Member(){
             {members.map((user) => {
                 return (
                     <div key={user.Username} className="tarjeta">
-                        <img alt="cosa" src={user.PhotoUrl}></img>
+                        <img alt="cosa" src={user.PhotoUrl !== null ? user.PhotoUrl : require("../../assets/avatar.jpg")}></img>
                         <p>{user.Username}</p>
                         <p>{user.City}</p>
                         <Link to={`${url}/${user.Id}`}><button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faUser} /></button></Link>

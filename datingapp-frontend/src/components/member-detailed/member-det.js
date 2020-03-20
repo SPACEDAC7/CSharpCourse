@@ -33,7 +33,7 @@ return (<div>
         <div>
             {member.Username}
         </div>
-        <img alt={member?.KnownAs} src={member?.PhotoUrl}></img>
+        <img alt={member?.KnownAs} src={member?.PhotoUrl !== null? member.PhotoUrl : require("../../assets/avatar.jpg")}></img>
         <div>
             <strong>Location:</strong>
             <p>{member?.City}, {member?.Country}</p>
