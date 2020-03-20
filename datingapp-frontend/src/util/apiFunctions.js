@@ -39,7 +39,7 @@ export function logOut() {
   console.log("We are logged out");
 }
 
-export async function register(username, password) {
+export async function register(username, password, gender, knownAs, dateOfBirth, city, country) {
   console.log("Registrar con el usuario: ", username, " y contrasenya: ", password);
   var url = host + 'api/auth/register';
   const res = await fetch(url, {
@@ -50,6 +50,11 @@ export async function register(username, password) {
     body: JSON.stringify({
       username: username,
       password: password,
+      gender: gender,
+      knownAs: knownAs,
+      dateOfBirth: dateOfBirth,
+      city: city,
+      country: country
     })
   })
     .then(res => {

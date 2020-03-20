@@ -42,7 +42,7 @@ namespace DatingApp.API.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<String> getUser(int id)
         {
             var user = await this.repo.GetUser(id);
