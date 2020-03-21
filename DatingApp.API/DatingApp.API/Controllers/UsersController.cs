@@ -30,11 +30,13 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<String> getUsers()
+        public async Task<String> getUsers([FromQuery] UserParams userParams)
         {
-            var users = await this.repo.GetUsers();
+            var users = await this.repo.GetUsers(userParams);
 
             var usersToReturn = this.mapper.Map<IEnumerable<UserForDetailed>>(users);
+
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
             return JsonConvert.SerializeObject(usersToReturn, Formatting.Indented,
                 new JsonSerializerSettings
