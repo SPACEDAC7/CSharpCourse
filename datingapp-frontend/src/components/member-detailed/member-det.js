@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faPaperPlane, faTrash, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import ImageUploader from "react-images-upload";
 import alertify from 'alertifyjs';
-
+import TimeAgo from 'timeago-react';
 
 export default function MemberDetailed(){
     
@@ -44,11 +44,14 @@ return (<div>
         </div>
         <div>
             <strong>Last Active:</strong>
-            <p>{member.LastActive}</p>
+            {member?.LastActive && <TimeAgo
+                datetime={member.LastActive.toLocaleString()} 
+                locale='en_GB'
+                />}
         </div>
         <div>
             <strong>Member Since:</strong>
-            <p>{member.Created}</p>
+            <p>{new Date(member.Created).toLocaleDateString()}</p>
         </div>
         <div>
             <strong>Introduction:</strong>
