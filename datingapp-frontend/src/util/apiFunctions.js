@@ -1,5 +1,18 @@
 const host = 'https://localhost:44356/';
 
+function updateHeaders(response) {
+  response.headers.forEach( (value, key) => {
+    if(key === 'pagination'){
+      var pagination = JSON.parse(value);
+
+      localStorage.setItem("currentPage", pagination.currentPage);
+      localStorage.setItem("itemsPerPage", pagination.itemsPerPage);
+      localStorage.setItem("totalItems", pagination.totalItems);
+      localStorage.setItem("totalPages", pagination.totalPages);
+    }
+  });
+}
+
 export async function logIn(username, password) {
   console.log('We are login with username: ', username ,' y paswword: ', password);
   var url = host + 'api/auth/login';
@@ -76,15 +89,18 @@ export async function register(username, password, gender, knownAs, dateOfBirth,
   return res;
 }
 
-export async function getUsers(){
-  var url = host + 'api/users'; 
+export async function getUsers(pageNumber = 1, pageSize = 5){
+  var url = host + 'api/users?pageNumber='+ pageNumber +'&pageSize=' + pageSize; 
   const res = await fetch(url, {
     method: 'Get',
     headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('token') ,
     },
   })
-    .then(response => response.json())
+    .then(response => {
+      updateHeaders(response);
+      return response.json();
+    })
     .then(res => {
       console.log(res);
       return res;

@@ -24,7 +24,7 @@ namespace DatingApp.API.Helpers
             var camelCaseFormatting = new JsonSerializerSettings();
             camelCaseFormatting.ContractResolver = new CamelCasePropertyNamesContractResolver();
             response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeaders, camelCaseFormatting));
-            response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
 
         public static int CalculateAge(this DateTime dateTime)
