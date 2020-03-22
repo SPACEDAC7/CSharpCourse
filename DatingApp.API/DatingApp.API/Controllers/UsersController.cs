@@ -32,6 +32,30 @@ namespace DatingApp.API.Controllers
         [HttpGet]
         public async Task<String> getUsers([FromQuery] UserParams userParams)
         {
+            var currectUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo = await this.repo.GetUser(currectUserId);
+            userParams.UserId = currectUserId;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                //This is a shit but I don't want to waste lot of time fixing the genders and adding an extra variable to add gender I am and gender I like
+                    switch (userFromRepo.Gender)
+                {
+                    case "female":
+                        userParams.Gender = "trans";
+                        break;
+                    case "trans":
+                        userParams.Gender = "male";
+                        break;
+                    case "male":
+                        userParams.Gender = "other";
+                        break;
+                    default:
+                        userParams.Gender = "female";
+                        break;
+                }
+            }
+
             var users = await this.repo.GetUsers(userParams);
 
             var usersToReturn = this.mapper.Map<IEnumerable<UserForDetailed>>(users);

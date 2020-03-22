@@ -97,10 +97,10 @@ class Register extends Component {
       <Form.Group controlId="exampleForm.ControlSelect1">
         <Form.Control as="select" onChange={(event)=>{this.handleGenderChange(event)}}>
           <option disabled selected>Por que genero te defines:</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Trans</option>
-          <option>Other</option>
+          <option value={"male"}>Male</option>
+          <option value={"female"}>Female</option>
+          <option value={"trans"}>Trans</option>
+          <option value={"other"}>Other</option>
         </Form.Control>
       </Form.Group>
 
