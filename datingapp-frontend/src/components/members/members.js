@@ -38,7 +38,7 @@ export default function Member(){
 
     const applyFilters = () =>{
         var genderToFilter = gender !== "" ? gender : "female"; //Hardcoded for now
-        getFilteredUsers(minAge, maxAge, genderToFilter).then(res => {
+        getFilteredUsers(minAge, maxAge, genderToFilter, orderBy).then(res => {
             setMembers(res);
         })
     }
