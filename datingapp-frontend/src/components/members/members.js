@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faHeart, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { Link, useRouteMatch } from 'react-router-dom'
 import Pagination from 'react-bootstrap/Pagination'
-import { Form, FormControl, Button, InputGroup} from 'react-bootstrap'
+import { Form, ButtonGroup, Button} from 'react-bootstrap'
 
 
 export default function Member(){
@@ -13,6 +13,7 @@ export default function Member(){
     const [gender, setGender] = useState("");
     const [minAge, setMinAge] = useState(18);
     const [maxAge, setMaxAge] = useState(99);
+    const [orderBy, setOrderBy] = useState("created");
     
     const getUsersPerPage = (page) => {
         getUsers(page).then(res => {
@@ -32,6 +33,7 @@ export default function Member(){
         setGender("");
         setMinAge(18);
         setMaxAge(99);
+        setOrderBy("created")
     }
 
     const applyFilters = () =>{
@@ -49,15 +51,11 @@ export default function Member(){
     return (
         <div>
             <div>
-                <div class="form-group">
-                    <p>Age From</p>
-                    <input type="number" class="form-control ml-1" id="minAge" name="minAge" value={minAge} onChange={(event) => {console.log("Min: ", event.target.value);setMinAge(event.target.value)}}></input>
-                </div>
-        
-                <div class="form-group px-2">
-                    <p>Age To</p>
-                    <input type="number" class="form-control ml-1" id="maxAge" name="maxAge" value={maxAge} onChange={(event) => {console.log("Max: ", event.target.value);setMaxAge(event.target.value)}}></input>
-                </div>
+                <p>Age From</p>
+                <input type="number" class="form-control ml-1" id="minAge" name="minAge" value={minAge} onChange={(event) => {console.log("Min: ", event.target.value);setMinAge(event.target.value)}}></input>
+    
+                <p>Age To</p>
+                <input type="number" class="form-control ml-1" id="maxAge" name="maxAge" value={maxAge} onChange={(event) => {console.log("Max: ", event.target.value);setMaxAge(event.target.value)}}></input>
 
                 <Form.Group controlId="exampleForm.ControlSelect1">
                     <Form.Control as="select" value={gender} onChange={(event)=>{setGender(event.target.value)}}>
@@ -68,8 +66,20 @@ export default function Member(){
                     <option value={"male"}>Male</option>
                     </Form.Control>
                 </Form.Group>
-                <button type="submit" class="btn btn-primary" onClick={() => applyFilters()}>Apply Filters</button>
-                <button type="button" class="btn btn-info" onClick={() => resetFilters()}>Reset Filter</button>
+
+                <p>Order By:</p>
+                <ButtonGroup aria-label="Basic example">
+                    {orderBy === "created" ? 
+                        <Button variant="secondary" onClick={() => setOrderBy("created")} active>Newest Users</Button>:
+                        <Button variant="secondary" onClick={() => setOrderBy("created")}>Newest Users</Button>}
+                    {orderBy !== "created" ? 
+                        <Button variant="secondary" onClick={() => setOrderBy("updated")} active>Last Update</Button>:
+                        <Button variant="secondary" onClick={() => setOrderBy("updated")}>Last Update</Button>}
+                </ButtonGroup>
+                <div>
+                    <button type="submit" class="btn btn-primary" onClick={() => applyFilters()}>Apply Filters</button>
+                    <button type="button" class="btn btn-info" onClick={() => resetFilters()}>Reset Filter</button>
+                </div>
             </div>
             <div className="tarjetas">
             {members.map((user) => {

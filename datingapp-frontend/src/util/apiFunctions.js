@@ -113,8 +113,8 @@ export async function getUsers(pageNumber = 1, pageSize = 5){
   return res;
 }
 
-export async function getFilteredUsers(minAge, maxAge, gender){
-  var url = host + 'api/users?minAge='+ minAge +'&maxAge=' + maxAge +'&gender=' + gender; 
+export async function getFilteredUsers(minAge, maxAge, gender, orderBy){
+  var url = host + 'api/users?minAge='+ minAge +'&maxAge=' + maxAge +'&gender=' + gender + '&orderBy=' + orderBy; 
   const res = await fetch(url, {
     method: 'Get',
     headers: {
