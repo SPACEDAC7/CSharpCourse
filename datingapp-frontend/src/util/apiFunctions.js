@@ -113,6 +113,30 @@ export async function getUsers(pageNumber = 1, pageSize = 5){
   return res;
 }
 
+export async function getFilteredUsers(minAge, maxAge, gender){
+  var url = host + 'api/users?minAge='+ minAge +'&maxAge=' + maxAge +'&gender=' + gender; 
+  const res = await fetch(url, {
+    method: 'Get',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => {
+      updateHeaders(response);
+      return response.json();
+    })
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}
+
 export async function getUserById(id){
   var url = host + 'api/users/' + id; 
   const res = await fetch(url, {
