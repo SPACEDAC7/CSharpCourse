@@ -39,7 +39,7 @@ namespace DatingApp.API.Controllers
             if (string.IsNullOrEmpty(userParams.Gender))
             {
                 //This is a shit but I don't want to waste lot of time fixing the genders and adding an extra variable to add gender I am and gender I like
-                    switch (userFromRepo.Gender)
+                switch (userFromRepo.Gender)
                 {
                     case "female":
                         userParams.Gender = "trans";
@@ -92,12 +92,42 @@ namespace DatingApp.API.Controllers
                 return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
             var user = await this.repo.GetUser(id);
 
-            this.mapper.Map(userForUpdated,user);
+            this.mapper.Map(userForUpdated, user);
 
             if (await this.repo.SaveAll())
                 return "";
 
             return JsonConvert.SerializeObject(new ErrorCustomized("500", "Error updating the user"));
+        }
+    
+
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<String> LikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+            var like = await this.repo.GetLike(id, recipientId);
+
+            if (like != null)
+                return JsonConvert.SerializeObject(new ErrorCustomized("400", "You already like this user"));
+
+            if(await this.repo.GetUser(recipientId) == null)
+                return JsonConvert.SerializeObject(new ErrorCustomized("404", "User not found"));
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+
+            this.repo.Add<Like>(like);
+
+            if(await this.repo.SaveAll())
+            {
+                return JsonConvert.SerializeObject(new CorrectReturn("Created like correctly"));
+            }
+
+            return JsonConvert.SerializeObject(new ErrorCustomized("401", "No se ha podid oguardar en la base de datos"));
         }
     }
 }
