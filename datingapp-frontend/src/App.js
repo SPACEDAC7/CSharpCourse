@@ -48,7 +48,7 @@ class App extends Component {
                 </div>) :
                 (<div><Nav className="mr-auto">
                   <Nav.Link><Link to="/members">Matches</Link></Nav.Link>
-                  <Nav.Link><Link to="/list">List</Link></Nav.Link>
+                  <Nav.Link><Link to="/lists">List</Link></Nav.Link>
                   <Nav.Link><Link to="/messages">Messages</Link></Nav.Link>
                 </Nav>
                   <NavDropdown title="Hello User" id="nav-dropdown">
@@ -63,10 +63,10 @@ class App extends Component {
 
           <Switch>
             <Route path="/lists">
-              <Lists></Lists>
+              <Lists userId={this.state.userId}></Lists>
             </Route>
             <Route path="/members">
-              <MemberRouter></MemberRouter>
+              <MemberRouter userId={this.state.userId}></MemberRouter>
             </Route>
             <Route path="/messages">
               <Message></Message>

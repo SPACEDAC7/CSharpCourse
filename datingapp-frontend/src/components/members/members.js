@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {getUsers, getFilteredUsers} from '../../util/apiFunctions'
+import {getUsers, getFilteredUsers, likeUser} from '../../util/apiFunctions'
 import './members.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faHeart, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
@@ -8,12 +8,13 @@ import Pagination from 'react-bootstrap/Pagination'
 import { Form, ButtonGroup, Button} from 'react-bootstrap'
 
 
-export default function Member(){
+export default function Member(props){
     const [members, setMembers] = useState([]);
     const [gender, setGender] = useState("");
     const [minAge, setMinAge] = useState(18);
     const [maxAge, setMaxAge] = useState(99);
     const [orderBy, setOrderBy] = useState("created");
+    const {userId} = props;
     
     const getUsersPerPage = (page) => {
         getUsers(page).then(res => {
@@ -90,7 +91,7 @@ export default function Member(){
                         <p>{user.Gender}</p>
                         <p>{user.City}</p>
                         <Link to={`${url}/${user.Id}`}><button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faUser} /></button></Link>
-                        <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faHeart} /></button>
+                        <button className="btn btn-primary little-borders" onClick={() => likeUser(userId,user.Id)}><FontAwesomeIcon icon={faHeart} /></button>
                         <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faPaperPlane} /></button>
                     </div>
                 )

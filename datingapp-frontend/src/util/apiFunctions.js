@@ -113,6 +113,54 @@ export async function getUsers(pageNumber = 1, pageSize = 5){
   return res;
 }
 
+export async function likeUser(userId, otherPersonUserId){
+  console.log("lIKE FROM: " , userId , " TO: ", otherPersonUserId)
+  var url = host + 'api/users/'+userId+'/like/'+otherPersonUserId; 
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => {
+      return response.json();
+    })
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}
+
+export async function getLikedUsers(name){
+  var url = host + 'api/users?' + name + '=true'; 
+  const res = await fetch(url, {
+    method: 'Get',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => {
+      updateHeaders(response);
+      return response.json();
+    })
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}
+
 export async function getFilteredUsers(minAge, maxAge, gender, orderBy){
   var url = host + 'api/users?minAge='+ minAge +'&maxAge=' + maxAge +'&gender=' + gender + '&orderBy=' + orderBy; 
   const res = await fetch(url, {
