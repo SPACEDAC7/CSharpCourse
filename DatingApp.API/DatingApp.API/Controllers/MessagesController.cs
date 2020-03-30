@@ -40,6 +40,35 @@ namespace DatingApp.API.Controllers
             return JsonConvert.SerializeObject(messageFromRepo);
         }
 
+        [HttpGet]
+        public async Task<string> GetMessagesForUser(int userId, [FromQuery]MessageParams messageParams)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+
+            messageParams.UserId = userId;
+
+            var messagesFromRepo = await this.repo.GetMessagesForUser(messageParams);
+
+            var messages = this.mapper.Map<IEnumerable<MessageToReturn>>(messagesFromRepo);
+
+            Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize, messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
+
+            return JsonConvert.SerializeObject(messages);
+        }
+
+        [HttpGet("thread/{recipientId}")]
+        public async Task<string> GetMessageThread(int userId, int recipientId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+
+            var messageFromRepo = await this.repo.GetMessagesThread(userId, recipientId);
+            var messageThread = this.mapper.Map<IEnumerable<MessageToReturn>>(messageFromRepo);
+
+            return JsonConvert.SerializeObject(messageThread);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateMessage(int userId, MessageForCreation messageForCreation)
         {
