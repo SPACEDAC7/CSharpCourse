@@ -10,6 +10,7 @@ using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace DatingApp.API.Controllers
 {
@@ -54,7 +55,10 @@ namespace DatingApp.API.Controllers
 
             Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize, messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
 
-            return JsonConvert.SerializeObject(messages);
+            var camelCaseFormatting = new JsonSerializerSettings();
+            camelCaseFormatting.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            return JsonConvert.SerializeObject(messages, camelCaseFormatting);
         }
 
         [HttpGet("thread/{recipientId}")]

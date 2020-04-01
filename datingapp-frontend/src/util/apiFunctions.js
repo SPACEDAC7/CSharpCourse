@@ -297,3 +297,28 @@ export async function apiUpdateUser(id, username) {
 
   return res;
 }
+
+export async function getMessages(userId, messageContainer, pageNumber = 1, pageSize = 5){
+  var url = host + 'api/users/' + userId + '/messages?messageContainer=' + messageContainer + '&pageNumber='+ pageNumber + '&pageSize=' + pageSize; 
+  console.log("get messages to this url: ", url)
+  const res = await fetch(url, {
+    method: 'Get',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => {
+      updateHeaders(response);
+      return response.json();
+    })
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}

@@ -69,7 +69,7 @@ class App extends Component {
               <MemberRouter userId={this.state.userId}></MemberRouter>
             </Route>
             <Route path="/messages">
-              <Message></Message>
+              <Message userId={this.state.userId}></Message>
             </Route>
             <Route path={`/edit`}>
               <MemberEdit userId={this.state.userId}></MemberEdit>
