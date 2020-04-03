@@ -83,16 +83,16 @@ export default function Member(props){
                 </div>
             </div>
             <div className="tarjetas">
-            {members.map((user) => {
+            {members.map((member) => {
                 return (
-                    <div key={user.Username} className="tarjeta">
-                        <img className="small-picture" alt="cosa" src={user.PhotoUrl !== null ? user.PhotoUrl : require("../../assets/avatar.jpg")}></img>
-                        <p>{user.Username}, {user.Age}</p>
-                        <p>{user.Gender}</p>
-                        <p>{user.City}</p>
-                        <Link to={`${url}/${user.Id}`}><button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faUser} /></button></Link>
-                        <button className="btn btn-primary little-borders" onClick={() => likeUser(userId,user.Id)}><FontAwesomeIcon icon={faHeart} /></button>
-                        <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faPaperPlane} /></button>
+                    <div key={member.Username} className="tarjeta">
+                        <img className="small-picture" alt="cosa" src={member.PhotoUrl !== null ? member.PhotoUrl : require("../../assets/avatar.jpg")}></img>
+                        <p>{member.Username}, {member.Age}</p>
+                        <p>{member.Gender}</p>
+                        <p>{member.City}</p>
+                        <Link to={`${url}/${member.Id}`}><button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faUser} /></button></Link>
+                        <button className="btn btn-primary little-borders" onClick={() => likeUser(userId,member.Id)}><FontAwesomeIcon icon={faHeart} /></button>
+                        <Link to={`${url}/${member.Id}/${userId}`}><button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faPaperPlane} /></button></Link>
                     </div>
                 )
             })}  

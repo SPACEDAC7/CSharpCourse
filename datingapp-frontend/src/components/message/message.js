@@ -30,7 +30,6 @@ export default function Message(props){
 
     }
 
-
     useEffect(() => {
         if(messages.length === 0){
             getMessages(userId, inboxType).then(messages => {
@@ -39,7 +38,6 @@ export default function Message(props){
             })
         }
     });
-    
     
     return (<div>
 
@@ -54,8 +52,6 @@ export default function Message(props){
                 <Button variant="secondary" onClick={() => getMessagesForInboxType("Outbox")} active><FontAwesomeIcon icon={faArrowRight} />Outbox</Button>:
                 <Button variant="secondary" onClick={() => getMessagesForInboxType("Outbox")}><FontAwesomeIcon icon={faArrowRight} />Outbox</Button>}
         </ButtonGroup>
-
-
   
         { messages.length === 0 && <div class="row">
             <h3>No messages</h3>
@@ -71,7 +67,7 @@ export default function Message(props){
                 </tr>
                 {messages.map(message => {
                     return (
-                <tr link="/members, messageContainer == 'Outbox' ? message.recipientId : message.senderId]">
+                <tr>
                 <td>{message.content}</td>
                 <td>
                     {inboxType != 'Outbox' && <div>

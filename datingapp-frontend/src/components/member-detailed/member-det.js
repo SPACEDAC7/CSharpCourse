@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom'
-import {getUserById, uploadFile, updateMainPicture, deletePicture} from '../../util/apiFunctions'
+import {getUserById, getMessages} from '../../util/apiFunctions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faPaperPlane, faTrash, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import ImageUploader from "react-images-upload";
@@ -10,7 +10,9 @@ import TimeAgo from 'timeago-react';
 export default function MemberDetailed(){
     
     const [member, setMember] = useState({});
+    const [messages, setMessages] = useState({});
     let {memberId} = useParams();
+    let {userId} = useParams();
 
     const [pictures, setPictures] = useState([]);
 
@@ -19,11 +21,20 @@ export default function MemberDetailed(){
     };
 
     useEffect(() => {
+        console.log("UserId: ", userId, " - MemberId: ", memberId);
         if (member.Username === undefined) {
             getUserById(memberId).then(res => {
-               setMember(res)
+               console.log("Member - ", res);
+                setMember(res)
             });
        }
+
+       if (userId !== undefined){
+        getMessages(memberId, "Inbox").then(res => {
+            console.log("Messages - ", res)
+            setMessages(res)
+        });
+    }
        if(pictures !== undefined){
            console.log("Pictures: ", pictures);
        }
@@ -61,33 +72,10 @@ return (<div>
             <strong>Interests:</strong>
             <p>{member.Interests}</p>
         </div>
-        <div>
-            <strong>Photos:</strong>
-            <div>
-                {member?.Photos?.map(photo => {
-                    return (<div>
-                        <img alt={photo?.Description} key={photo.Id} src={photo?.Url}></img>
-                        <button className="btn btn-primary little-borders" onClick={()=> updateMainPicture(memberId, photo.Id)}><FontAwesomeIcon icon={faExclamation} /> Makes main</button>
-                        <button className="btn btn-primary little-borders" onClick={()=>{
-                            alertify.confirm('Delete photo', 'Seguro que quieres borrar esta photo', function(){ deletePicture(memberId, photo.Id) }
-                            , function(){ alertify.error('Cancel')});
-                        }}><FontAwesomeIcon icon={faTrash} /> Remove</button>
-                        </div>);
-                })}
-                <div>
-                    <div>Upload a new image</div>
-                    <ImageUploader
-                        withIcon={true}
-                        onChange={onDrop}
-                        imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-                        maxFileSize={5242880}
-                        withPreview={true}
-                        />
-                </div>
-                <button className="btn btn-warning little-borders" onClick={() => uploadFile(memberId, pictures)}>Upload Picture</button>
-            </div>
-        </div>
         <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faHeart} /> Like</button>
         <button className="btn btn-primary little-borders"><FontAwesomeIcon icon={faPaperPlane} /> Message</button>
+
+        
+
      </div>);
 }

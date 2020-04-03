@@ -322,3 +322,28 @@ export async function getMessages(userId, messageContainer, pageNumber = 1, page
 
   return res;
 }
+
+export async function getMessagesThread(userId, recipientId){
+  var url = host + 'api/users/' + userId + '/messages/thread/'+ recipientId;
+  console.log("get messages to this url: ", url)
+  const res = await fetch(url, {
+    method: 'Get',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token') ,
+    },
+  })
+    .then(response => {
+      updateHeaders(response);
+      return response.json();
+    })
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(error => {
+      console.log("Ellor - ", error);
+      return false;
+    });
+
+  return res;
+}
