@@ -102,5 +102,35 @@ namespace DatingApp.API.Controllers
             return BadRequest("Created the message failed");
 
         }
+
+        [HttpPost]
+        public async Task<string> RemoveMessage(int mId, int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return JsonConvert.SerializeObject(new ErrorCustomized("401", "Unauthorized"));
+
+            var messageFromRepo = await this.repo.GetMessage(mId);
+
+            if(messageFromRepo.SenderId == userId)
+            {
+                messageFromRepo.SenderDeleted = true;
+            }
+            if (messageFromRepo.RecipientId == userId)
+            {
+                messageFromRepo.RecipientDeleted = true;
+            }
+
+            if(messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
+            {
+                this.repo.Delete(messageFromRepo);
+            }
+
+            if(await this.repo.SaveAll())
+            {
+                return JsonConvert.SerializeObject(new CorrectReturn("Removed correctly"));
+            }
+
+            throw new Exception("Error deleting the message");
+        }
     }
 }
