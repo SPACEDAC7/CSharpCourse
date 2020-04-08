@@ -20,15 +20,15 @@ namespace DatingApp.API.Data
 
         public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.Equals(username));
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName.Equals(username));
 
             if (user == null)
                 return null;
 
-            Console.WriteLine("Usuario para el login. Username: " + user.Username + " , PaswordHash: ");
-            Console.WriteLine(Encoding.UTF8.GetString(user.PasswordHash));
+            Console.WriteLine("Usuario para el login. Username: " + user.UserName + " , PaswordHash: ");
+            /*Console.WriteLine(Encoding.UTF8.GetString(user.PasswordHash));
             Console.WriteLine("Salt: ");
-            Console.WriteLine(Encoding.UTF8.GetString(user.PasswordSalt));
+            Console.WriteLine(Encoding.UTF8.GetString(user.PasswordSalt));*/
 
             if (!VerifyUser(password, user.PasswordHash, user.PasswordSalt))
             {
@@ -63,8 +63,8 @@ namespace DatingApp.API.Data
 
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            /*user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;*/
 
             await _context.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -86,7 +86,7 @@ namespace DatingApp.API.Data
 
         public async Task<bool> UserExists(string username)
         {
-            return await this._context.Users.AnyAsync(x => x.Username == username);
+            return await this._context.Users.AnyAsync(x => x.UserName == username);
         }
     }
 }
