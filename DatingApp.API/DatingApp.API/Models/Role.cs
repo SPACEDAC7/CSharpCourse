@@ -8,6 +8,6 @@ namespace DatingApp.API.Models
 {
     public class Role: IdentityRole<int>
     {
-        public ICollection<UserRole> usersRoles { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }
