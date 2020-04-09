@@ -11,6 +11,7 @@ using DatingApp.API.DTOs;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -26,12 +27,16 @@ namespace DatingApp.API.Controllers
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
         private readonly IMapper mapper;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this._repo = repo;
             this._config = config;
             this.mapper = mapper;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -63,15 +68,27 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<String> Login([FromBody]UserForLogin userForLogin)
         {
-            var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), userForLogin.Password);
-            Console.WriteLine("User From Repo: " + userFromRepo + " ---- ");
-            if (userFromRepo == null)
+            var userFromRepo = await this.userManager.FindByNameAsync(userForLogin.Username);
+            var result = await this.signInManager.CheckPasswordSignInAsync(userFromRepo, userForLogin.Password, false);
+            
+            if (!result.Succeeded)
             {
                 ErrorCustomized e = new ErrorCustomized("403", "unauthorized");
                 return JsonConvert.SerializeObject(e);
             }
+
+            string res = GenerateJwtToken(userFromRepo);
+
+            Token tokenTosend = new Token(res, userFromRepo.Id);
+            var user = this.mapper.Map<UserForList>(userFromRepo);
+
+            return JsonConvert.SerializeObject(new { tokenTosend, user});
+        }
+
+        private string GenerateJwtToken(User userFromRepo)
+        {
             var claims = new[]
-            {
+          {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.UserName)
             };
@@ -91,11 +108,7 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            String res = tokenHandler.WriteToken(token);
-
-            Token tokenTosend = new Token(res, userFromRepo.Id);
-
-            return JsonConvert.SerializeObject(tokenTosend);
+            return tokenHandler.WriteToken(token);
         }
 
     }
