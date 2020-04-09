@@ -25,15 +25,6 @@ namespace DatingApp.API.Data
             if (user == null)
                 return null;
 
-            Console.WriteLine("Usuario para el login. Username: " + user.UserName + " , PaswordHash: ");
-            /*Console.WriteLine(Encoding.UTF8.GetString(user.PasswordHash));
-            Console.WriteLine("Salt: ");
-            Console.WriteLine(Encoding.UTF8.GetString(user.PasswordSalt));*/
-
-            if (!VerifyUser(password, user.PasswordHash, user.PasswordSalt))
-            {
-                return null;
-            }
             return user;
         }
 
@@ -62,9 +53,6 @@ namespace DatingApp.API.Data
             byte[] passwordHash, passwordSalt;
 
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-            /*user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;*/
 
             await _context.AddAsync(user);
             await _context.SaveChangesAsync();
