@@ -24,15 +24,13 @@ namespace DatingApp.API.Controllers
     [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(IConfiguration config, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            this._repo = repo;
             this._config = config;
             this.mapper = mapper;
             this.userManager = userManager;
@@ -42,26 +40,18 @@ namespace DatingApp.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]UserForRegister userForRegister) //L33: FromBody is not necessary if you have ApiController notation on the top
         {
-            // L:33 Validate request id we are not using [ApiController]
-            /*if (!ModelState.IsValid)
-            {
-                return StatusCode(500);
-            }*/
-
-            userForRegister.Username = userForRegister.Username.ToLower();
-
-            if(await _repo.UserExists(userForRegister.Username))
-            {
-                return BadRequest("User already exists");
-            }
-
             var userToCreate = this.mapper.Map<User>(userForRegister);
 
-            var createdUser = await _repo.Register(userToCreate, userForRegister.Password);
+            var result = await this.userManager.CreateAsync(userToCreate, userForRegister.Password);
 
-            var userToReturn = this.mapper.Map<UserForDetailed>(createdUser);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
 
-            return CreatedAtRoute("GetUser", new { controller = "users", id = createdUser.Id }, userToReturn);
+            var userToReturn = this.mapper.Map<UserForDetailed>(userToCreate);
+
+            return CreatedAtRoute("GetUser", new { controller = "users", id = userToCreate.Id }, userToReturn);
 
         }
 

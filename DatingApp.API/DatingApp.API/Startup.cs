@@ -74,12 +74,6 @@ namespace DatingApp.API
             services.Configure<CloudinarySettings>(Configuration.GetSection("AppSettings:CloudinarySettings"));
             //Lecture 78 Add Auto mapper
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
-            //Lecture 30 Add Dependency injection
-            services.AddScoped<IAuthRepository, AuthRepository>(); // Scoped objects are the same within a request, but different across different requests
-            /*Lecture 30 studied
-             services.AddSingleton() - Singleton objects are the same for every object and every request (Could cause problems with concurrency)
-             services.AddTransient() - Transient objects are always different; a new instance is provided to every controller and every service.
-             */
             services.AddScoped<IDatingRepository, DatingRepository>(); // Scoped objects are the same within a request, but different across different requests
             services.AddScoped<LogUserActivity>();
         }
