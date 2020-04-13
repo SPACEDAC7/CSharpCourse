@@ -21,6 +21,7 @@ namespace DatingApp.API.Controllers
         }
         // GET api/values
         [HttpGet]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> GetValues()
         {
             var values = await _context.Values.ToListAsync();
@@ -29,7 +30,7 @@ namespace DatingApp.API.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize( Roles = "Admin")]
         public async Task<IActionResult> GetValue(int id)
         {
             var values = await _context.Values.FirstOrDefaultAsync(x => x.Id.Equals(id));

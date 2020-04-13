@@ -67,7 +67,7 @@ namespace DatingApp.API.Controllers
                 return JsonConvert.SerializeObject(e);
             }
 
-            string res = GenerateJwtToken(userFromRepo);
+            string res = GenerateJwtToken(userFromRepo).Result;
 
             Token tokenTosend = new Token(res, userFromRepo.Id);
             var user = this.mapper.Map<UserForList>(userFromRepo);
@@ -75,13 +75,20 @@ namespace DatingApp.API.Controllers
             return JsonConvert.SerializeObject(new { tokenTosend, user});
         }
 
-        private string GenerateJwtToken(User userFromRepo)
+        private async Task<string> GenerateJwtToken(User userFromRepo)
         {
-            var claims = new[]
+            var claims = new List<Claim>
           {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.UserName)
             };
+
+            var roles = await userManager.GetRolesAsync(userFromRepo);
+
+            foreach ( var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config.GetSection("AppSettings:Token").Value));
 
